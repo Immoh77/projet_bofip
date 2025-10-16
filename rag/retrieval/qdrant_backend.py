@@ -1,9 +1,16 @@
 # rag/retrieval/qdrant_backend.py
 from __future__ import annotations
 from typing import Dict, Any, List, Iterable, Optional
-
 from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer  # <- dense local e5
+import time
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+)
+log = logging.getLogger("indexing")
 
 # === Config Qdrant (local docker) ===
 QDRANT_URL = "http://localhost:6333"
@@ -48,9 +55,11 @@ def ensure_collection():
     try:
         cols = client.get_collections().collections
         if any(c.name == COLLECTION for c in cols):
+            log.info(f"Collection '{COLLECTION_NAME}' déjà existante")
             return
     except Exception:
         pass
+
 
     client.create_collection(
         collection_name=COLLECTION,
@@ -63,6 +72,7 @@ def ensure_collection():
             SPARSE_NAME: models.SparseVectorParams()
         },
     )
+log.info(f"Collection '{COLLECTION_NAME}' créée")
 
 def _build_filter(filters: Dict[str, list] | None) -> Optional[models.Filter]:
     if not filters:
@@ -76,89 +86,86 @@ def _build_filter(filters: Dict[str, list] | None) -> Optional[models.Filter]:
             )
     return models.Filter(must=must) if must else None
 
-def upsert_chunks(chunks: Iterable[Dict[str, Any]], batch: int = 256):
+def upsert_chunks(chunks, batch: int = 256, max_points: int | None = None):
     """
-    Ingestion des *small chunks* :
-      - IDs Qdrant : entiers séquentiels (Qdrant exige int ou UUID strict)
-      - DENSE : vecteur (list[float]) généré localement avec SentenceTransformer
-      - SPARSE : SPLADE via FastEmbed côté serveur
+    Ingestion en lots avec logs détaillés, sans fonction imbriquée (pas de nonlocal).
+    - max_points: limite le nombre de points à indexer pour un test (ex: 5000)
     """
     ensure_collection()
-    client = get_client()
-    st = get_st_model()
 
-    buf_dense: List[List[float]] = []
-    buf_payloads: List[dict] = []
-    buf_ids: List[int] = []
-    next_id = 1  # ← IDs entiers séquentiels
+    total = len(chunks) if max_points is None else min(len(chunks), max_points)
+    log.info(f"🚚 Début d’indexation : {total} points (batch={batch})")
+
+    points = []
+    done = 0
+    t0 = time.perf_counter()
+    last_log = t0
+
+    for i, ch in enumerate(chunks, start=1):
+        if max_points is not None and i > max_points:
+            break
+
+        text = (ch.get("contenu") or ch.get("text") or "").strip()
+        if not text:
+            continue
+
+        meta = ch.get("metadata", {}) or {}
+
+        # Embeddings
+        try:
+            dense_vec = list(_dense_embedder.embed([text]))[0]
+        except Exception as e:
+            log.error(f"Embedding dense error sur l’élément {i}: {e}")
+            continue
+
+        try:
+            sparse = list(_sparse_embedder.embed([text]))[0]  # {"indices": [...], "values": [...]}
+            sparse_vec = {"indices": sparse["indices"], "values": sparse["values"]}
+        except Exception as e:
+            log.error(f"Embedding sparse error sur l’élément {i}: {e}")
+            continue
+
+        # Point
+        points.append(
+            PointStruct(
+                id=str(uuid.uuid4()),
+                vector={"dense": dense_vec, "sparse": sparse_vec},
+                payload={**meta, "text": text},
+            )
+        )
+
+        # Flush par batch
+        if len(points) >= batch:
+            try:
+                client.upsert(collection_name=COLLECTION_NAME, points=points)
+                done += len(points)
+                points.clear()
+            except Exception as e:
+                log.error(f"Erreur upsert batch (taille={batch}) à i={i}: {e}")
+                time.sleep(0.5)  # petit backoff et on continue
+
+            # Logs périodiques
+            now = time.perf_counter()
+            if now - last_log >= 2.0:
+                rate = done / max(1e-6, now - t0)
+                log.info(f"📦 {done}/{total} points upsertés  (~{rate:.1f} pts/s)")
+                last_log = now
+
+    # Flush final
+    if points:
+        try:
+            client.upsert(collection_name=COLLECTION_NAME, points=points)
+            done += len(points)
+        except Exception as e:
+            log.error(f"Erreur upsert (final) : {e}")
+
+    dt = time.perf_counter() - t0
+    rate = done / max(1e-6, dt)
+    log.info(f"✅ Indexation terminée : {done}/{total} points en {dt:.1f}s (~{rate:.1f} pts/s)")
+
 
     def _flush():
         nonlocal buf_dense, buf_payloads, buf_ids
-        if not buf_dense:
-            return
-        client.upload_collection(
-            collection_name=COLLECTION,
-            vectors=[
-                {
-                    DENSE_NAME: d,  # dense vector list[float]
-                    SPARSE_NAME: models.Document(
-                        text=p["text"],
-                        model=SPARSE_FASTEMBED_MODEL
-                    ),
-                }
-                for d, p in zip(buf_dense, buf_payloads)
-            ],
-            payload=buf_payloads,
-            ids=buf_ids,       # ← entiers
-            parallel=1,        # ← si tu vois encore des warnings, garde 1
-        )
-        buf_dense, buf_payloads, buf_ids = [], [], []
-
-    texts: List[str] = []
-    metas: List[dict] = []
-    ids_tmp: List[int] = []
-
-    for ch in chunks:
-        txt = ch.get("contenu") or ""
-        md = ch.get("metadata", {}) or {}
-
-        # on garde l'id d'origine EN PAYLOAD, mais l'ID Qdrant = entier
-        payload = {
-            "text": txt,
-            "base": md.get("base"),
-            "source": md.get("source"),
-            "serie": md.get("serie"),
-            "division": md.get("division"),
-            "chunk_id": md.get("chunk_id") or md.get("id"),  # id d'origine préservé ici
-            "parent_chunk_id": md.get("parent_chunk_id"),
-            "titre_document": md.get("titre_document"),
-            "titre_bloc": md.get("titre_bloc"),
-            "permalien": md.get("permalien") or md.get("url") or md.get("lien"),
-        }
-
-        texts.append(txt)
-        metas.append(payload)
-        ids_tmp.append(next_id)
-        next_id += 1
-
-        if len(texts) >= batch:
-            vecs = st.encode(texts, normalize_embeddings=True).tolist()
-            buf_dense.extend(vecs)
-            buf_payloads.extend(metas)
-            buf_ids.extend(ids_tmp)
-            texts, metas, ids_tmp = [], [], []
-            _flush()
-
-    if texts:
-        vecs = st.encode(texts, normalize_embeddings=True).tolist()
-        buf_dense.extend(vecs)
-        buf_payloads.extend(metas)
-        buf_ids.extend(ids_tmp)
-        _flush()
-
-
-    def _flush():
-        nonlocal buf_dense, buf_sparse_docs, buf_payloads, buf_ids
         if not buf_dense:
             return
         # On upload les deux espaces en parallèle :
