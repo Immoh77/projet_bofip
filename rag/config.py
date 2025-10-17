@@ -18,6 +18,12 @@ SENTENCE_TRANSFORMERS_MODEL = "intfloat/multilingual-e5-base"
 # Modèles OpenAI utilisés
 OPENAI_CHAT_MODEL = "chatgpt-4o-latest"     #"gpt-4o"  # gpt-3.5-turbo #chatgpt-4o-latest
 
+# Base vectorielle
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", None)
+QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "bofip_hybrid")
+QDRANT_VECTOR_SIZE = int(os.getenv("QDRANT_VECTOR_SIZE", "768"))
+
 # Chemins fichiers
 SOURCE_FILE = BASE_DIR / "data" / "raw" / "fiscale" / "bofip" / "bofip-vigueur.json"
 OUTPUT_BIG_CHUNKS = "data/processed/bofip_chunks_bs.json"

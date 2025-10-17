@@ -2,37 +2,47 @@ import json
 from bs4 import BeautifulSoup
 from uuid import uuid4
 import tiktoken
-from rag.config import SOURCE_FILE, OUTPUT_BIG_CHUNKS, OUTPUT_SMALL_CHUNKS, CHUNK_SIZE, CHUNK_OVERLAP, ALLOWED_SERIES, EXCLUDED_DOCUMENT_PREFIXES
+import os
+from rag.config import (
+    SOURCE_FILE,
+    OUTPUT_BIG_CHUNKS,
+    OUTPUT_SMALL_CHUNKS,
+    CHUNK_SIZE,
+    CHUNK_OVERLAP,
+    ALLOWED_SERIES,
+    EXCLUDED_DOCUMENT_PREFIXES,
+)
 
 # === INITIALISATION ===
-tokenizer = tiktoken.get_encoding("cl100k_base")  # Tokenizer OpenAI utilisé pour compter les tokens dans les textes
+tokenizer = tiktoken.get_encoding("cl100k_base")  # Tokenizer OpenAI
 
 # === FILTRAGE DES DOCUMENTS ===
-
 def filter_documents_by_series(data):
+    """Filtre les documents selon la série autorisée et les préfixes exclus."""
     return [
         doc for doc in data
         if isinstance(doc.get("serie"), str)
-        and doc["serie"].strip().upper() in ALLOWED_SERIES  # Fixe les informat
+        and doc["serie"].strip().upper() in ALLOWED_SERIES
         and not any(str(doc.get("identifiant_juridique", "")).startswith(prefix) for prefix in EXCLUDED_DOCUMENT_PREFIXES)
     ]
-# === EXTRACTION DES BLOCS TEXTUELS STRUCTURÉS ===
 
+# === EXTRACTION DES BLOCS TEXTUELS STRUCTURÉS ===
 def extract_blocks_from_html(documents):
+    """Extrait des blocs de texte structurés depuis le HTML."""
     blocks = []
     for doc in documents:
         html = doc.get("contenu_html")
         if not html:
             continue
 
-        soup = BeautifulSoup(html, "html.parser")  # Parsing HTML
+        soup = BeautifulSoup(html, "html.parser")
         block_title = ""
         block_content = []
         paragraph_number = ""
 
         for el in soup.find_all(["h1", "h2", "h3", "p", "li"]):
             text = el.get_text()
-            if text.strip().isdigit():  # Gestion des numéros de paragraphes
+            if text.strip().isdigit():
                 paragraph_number = text.strip()
                 continue
 
@@ -46,7 +56,7 @@ def extract_blocks_from_html(documents):
                 continue
 
             tag = el.name.lower()
-            if tag in ["h1", "h2", "h3"]:  # Considérés comme des titres de blocs
+            if tag in ["h1", "h2", "h3"]:
                 block_title = text
                 continue
 
@@ -60,14 +70,14 @@ def extract_blocks_from_html(documents):
                 "division": doc.get("division", ""),
                 "document_id": doc.get("identifiant_juridique", ""),
                 "permalien": doc.get("permalien", ""),
-                "contenu": "\n".join(block_content)
+                "contenu": "\n".join(block_content),
             })
 
     return blocks
 
 # === CHUNKING AVEC OVERLAP ===
-
 def split_with_overlap(blocks, max_tokens=700, overlap=100):
+    """Découpe les blocs en chunks avec chevauchement (overlap)."""
     refined_chunks = []
 
     for block in blocks:
@@ -93,12 +103,11 @@ def split_with_overlap(blocks, max_tokens=700, overlap=100):
                     sub_text = tokenizer.decode(sub_tokens)
                     chunk_id = str(uuid4())
                     metadata = build_metadata(block, chunk_id=chunk_id)
-
                     refined_chunks.append({
                         "chunk_id": chunk_id,
                         "chunk_index": chunk_index,
                         "contenu": sub_text.strip(),
-                        "metadata": metadata
+                        "metadata": metadata,
                     })
                     chunk_index += 1
                 i += 1
@@ -109,16 +118,15 @@ def split_with_overlap(blocks, max_tokens=700, overlap=100):
                 chunk_text = "\n".join(current_chunk)
                 chunk_id = str(uuid4())
                 metadata = build_metadata(block, chunk_id=chunk_id)
-
                 refined_chunks.append({
                     "chunk_id": chunk_id,
                     "chunk_index": chunk_index,
                     "contenu": chunk_text.strip(),
-                    "metadata": metadata
+                    "metadata": metadata,
                 })
                 chunk_index += 1
 
-                # Appliquer l’overlap
+                # Overlap
                 n_tokens = 0
                 j = len(current_tokens) - 1
                 while j >= 0 and n_tokens < overlap:
@@ -136,18 +144,16 @@ def split_with_overlap(blocks, max_tokens=700, overlap=100):
             chunk_text = "\n".join(current_chunk)
             chunk_id = str(uuid4())
             metadata = build_metadata(block, chunk_id=chunk_id)
-
             refined_chunks.append({
                 "chunk_id": chunk_id,
                 "chunk_index": chunk_index,
                 "contenu": chunk_text.strip(),
-                "metadata": metadata
+                "metadata": metadata,
             })
 
     return refined_chunks
 
-# === MÉTADONNÉES DES CHUNKS ===
-
+# === MÉTADONNÉES ===
 def build_metadata(block, chunk_id=None, parent_chunk_id=None):
     metadata = {
         "base": "fiscal",
@@ -157,7 +163,7 @@ def build_metadata(block, chunk_id=None, parent_chunk_id=None):
         "serie": block["serie"],
         "division": block["division"],
         "document_id": block["document_id"],
-        "permalien": block["permalien"]
+        "permalien": block["permalien"],
     }
     if chunk_id:
         metadata["chunk_id"] = chunk_id
@@ -165,9 +171,10 @@ def build_metadata(block, chunk_id=None, parent_chunk_id=None):
         metadata["parent_chunk_id"] = parent_chunk_id
     return metadata
 
-# === CHUNKING FIN : PETITS CHUNKS POUR L’EMBEDDING ===
-
+# === PETITS CHUNKS POUR L’EMBEDDING ===
 def generate_small_chunks(input_path, output_path, max_tokens=100):
+    """Découpe les gros chunks en sous-chunks plus petits (embedding)."""
+
     def deduplicate_chunks(chunks):
         seen = set()
         unique_chunks = []
@@ -188,7 +195,6 @@ def generate_small_chunks(input_path, output_path, max_tokens=100):
         metadata = chunk["metadata"]
 
         prefix = f"{metadata['titre_document']} - {metadata['titre_bloc']}".strip()
-
         phrases = content.split("\n")
         current_text = []
         current_tokens = 0
@@ -205,13 +211,12 @@ def generate_small_chunks(input_path, output_path, max_tokens=100):
             if current_tokens + token_len > max_tokens and current_text:
                 chunk_id = f"{parent_id}__{sub_index}"
                 chunk_metadata = build_metadata(metadata, chunk_id=chunk_id, parent_chunk_id=parent_id)
-
                 small_chunks.append({
                     "id": chunk_id,
                     "parent_chunk_id": parent_id,
                     "small_index": sub_index,
                     "contenu": f"{prefix}\n" + "\n".join(current_text).strip(),
-                    "metadata": chunk_metadata
+                    "metadata": chunk_metadata,
                 })
                 sub_index += 1
                 current_text = []
@@ -223,13 +228,12 @@ def generate_small_chunks(input_path, output_path, max_tokens=100):
         if current_text:
             chunk_id = f"{parent_id}__{sub_index}"
             chunk_metadata = build_metadata(metadata, chunk_id=chunk_id, parent_chunk_id=parent_id)
-
             small_chunks.append({
                 "id": chunk_id,
                 "parent_chunk_id": parent_id,
                 "small_index": sub_index,
                 "contenu": f"{prefix}\n" + "\n".join(current_text).strip(),
-                "metadata": chunk_metadata
+                "metadata": chunk_metadata,
             })
 
     small_chunks = deduplicate_chunks(small_chunks)
@@ -237,8 +241,8 @@ def generate_small_chunks(input_path, output_path, max_tokens=100):
     with open(output_path, "w", encoding="utf-8") as f_out:
         json.dump(small_chunks, f_out, indent=2, ensure_ascii=False)
 
-# === PIPELINE PRINCIPAL ===
 
+# === PIPELINE PRINCIPAL ===
 def main():
     print("🔄 Loading source file...")
     with open(SOURCE_FILE, "r", encoding="utf-8") as f:
@@ -265,7 +269,7 @@ def main():
     generate_small_chunks(
         input_path=OUTPUT_BIG_CHUNKS,
         output_path=OUTPUT_SMALL_CHUNKS,
-        max_tokens=100
+        max_tokens=100,
     )
 
 if __name__ == "__main__":

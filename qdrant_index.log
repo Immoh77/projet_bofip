@@ -1,0 +1,976 @@
+2025-10-17 15:31:42,652 | INFO     | Use pytorch device_name: cpu
+2025-10-17 15:31:42,652 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 15:31:46,483 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 15:31:46,484 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 15:31:46,498 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 15:31:46,499 | INFO     | 🛠️  Création de la collection 'bofip_hybrid' ...
+2025-10-17 15:31:46,738 | INFO     | HTTP Request: PUT http://localhost:6333/collections/bofip_hybrid "HTTP/1.1 200 OK"
+2025-10-17 15:31:46,740 | INFO     | ✅ Collection 'bofip_hybrid' créée avec succès.
+2025-10-17 15:31:46,740 | INFO     | 📥 Début d’indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 15:31:47,425 | ERROR    | ❌ Erreur pendant l’indexation : 100 validation errors for PointStruct
+vector.list[float]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[float]
+  Input should be a valid list [type=list_type, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.indices
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.values
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.text
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.image
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.object
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.Document.text
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Document.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.image
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.object
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+2025-10-17 15:33:52,752 | INFO     | Use pytorch device_name: cpu
+2025-10-17 15:33:52,753 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 15:33:56,530 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 15:33:56,531 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 15:33:56,546 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 15:33:56,548 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 15:33:56,548 | INFO     | 📥 Début d’indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 15:33:56,633 | ERROR    | ❌ Erreur pendant l’indexation : Unknown arguments: ['sparse_vectors']
+2025-10-17 15:35:39,227 | INFO     | Use pytorch device_name: cpu
+2025-10-17 15:35:39,228 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 15:35:42,934 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 15:35:42,935 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 15:35:42,938 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 15:35:42,940 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 15:35:42,940 | INFO     | 📥 Début d’indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 15:35:43,029 | ERROR    | ❌ Erreur pendant l’indexation : Unknown arguments: ['sparse_vectors']
+2025-10-17 15:38:42,572 | INFO     | Use pytorch device_name: cpu
+2025-10-17 15:38:42,573 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 15:38:46,055 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 15:38:46,056 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 15:38:46,071 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 15:38:46,072 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 15:38:46,073 | INFO     | 📥 Début d’indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 15:38:46,159 | ERROR    | ❌ Erreur pendant l’indexation : 100 validation errors for PointStruct
+vector.list[float]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[float]
+  Input should be a valid list [type=list_type, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.indices
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.values
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.text
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.image
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.object
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.model
+  Field required [type=missing, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.853
+  Keys should be strings [type=invalid_key, input_value=853, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.3563
+  Keys should be strings [type=invalid_key, input_value=3563, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.4984
+  Keys should be strings [type=invalid_key, input_value=4984, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.8031
+  Keys should be strings [type=invalid_key, input_value=8031, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.14687
+  Keys should be strings [type=invalid_key, input_value=14687, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.17699
+  Keys should be strings [type=invalid_key, input_value=17699, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21676
+  Keys should be strings [type=invalid_key, input_value=21676, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21761
+  Keys should be strings [type=invalid_key, input_value=21761, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.27771
+  Keys should be strings [type=invalid_key, input_value=27771, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29191
+  Keys should be strings [type=invalid_key, input_value=29191, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29613
+  Keys should be strings [type=invalid_key, input_value=29613, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29859
+  Keys should be strings [type=invalid_key, input_value=29859, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.31958
+  Keys should be strings [type=invalid_key, input_value=31958, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.34430
+  Keys should be strings [type=invalid_key, input_value=34430, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.35275
+  Keys should be strings [type=invalid_key, input_value=35275, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.36078
+  Keys should be strings [type=invalid_key, input_value=36078, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39175
+  Keys should be strings [type=invalid_key, input_value=39175, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39780
+  Keys should be strings [type=invalid_key, input_value=39780, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.49626
+  Keys should be strings [type=invalid_key, input_value=49626, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.11/v/invalid_key
+vector.Document.text
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Document.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.image
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.object
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...39780: 1.0, 49626: 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={853: 1.0, 3563: 1.0, 498... 39780: 1.0, 49626: 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+2025-10-17 17:49:07,239 | INFO     | Use pytorch device_name: cpu
+2025-10-17 17:49:07,240 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 17:49:11,341 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 17:49:11,342 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 17:49:11,352 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 17:49:11,353 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 17:49:11,353 | INFO     | 📥 Indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 17:49:12,082 | INFO     | HTTP Request: PUT http://localhost:6333/collections/bofip_hybrid/points?wait=true "HTTP/1.1 200 OK"
+2025-10-17 17:49:12,083 | INFO     | ✅ 3 vecteurs denses insérés.
+2025-10-17 17:49:12,084 | ERROR    | ❌ Erreur pendant l’indexation : 'QdrantClient' object has no attribute 'upload_sparse_vectors'
+2025-10-17 18:14:39,651 | INFO     | Use pytorch device_name: cpu
+2025-10-17 18:14:39,652 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 18:14:44,076 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 18:14:44,130 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 18:14:44,154 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 18:14:44,156 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 18:14:44,156 | INFO     | 📥 Indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 18:14:44,875 | ERROR    | ❌ Erreur pendant l’indexation : 100 validation errors for PointStruct
+vector.list[float]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[float]
+  Input should be a valid list [type=list_type, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.indices
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.values
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.853
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.3563
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.4984
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.8031
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.14687
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.17699
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21676
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.21761
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.27771
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29191
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29613
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.29859
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.31958
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.34430
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.35275
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.36078
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39175
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.39780
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.SparseVector.49626
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.list[list[float]]
+  Input should be a valid list [type=list_type, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.text
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.model
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.853
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.3563
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.4984
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.8031
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.14687
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.17699
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21676
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.21761
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.27771
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29191
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29613
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.29859
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.31958
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.34430
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.35275
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.36078
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39175
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.39780
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Document.49626
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.image
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.model
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.853
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.3563
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.4984
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.8031
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.14687
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.17699
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21676
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.21761
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.27771
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29191
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29613
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.29859
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.31958
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.34430
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.35275
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.36078
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39175
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.39780
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.Image.49626
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.object
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.model
+  Field required [type=missing, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.853
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.3563
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.4984
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.8031
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.14687
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.17699
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21676
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.21761
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.27771
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29191
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29613
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.29859
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.31958
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.34430
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.35275
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.36078
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39175
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.39780
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.dict[str,union[list[float],SparseVector,list[list[float]],Document,Image,InferenceObject]].sparse.InferenceObject.49626
+  Extra inputs are not permitted [type=extra_forbidden, input_value=1.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Document.text
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Document.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Document.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.image
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.Image.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.Image.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.object
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.model
+  Field required [type=missing, input_value={'dense': [0.031305368989...80': 1.0, '49626': 1.0}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+vector.InferenceObject.dense
+  Extra inputs are not permitted [type=extra_forbidden, input_value=[0.03130536898970604, 0.0...64, 0.03449035808444023], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+vector.InferenceObject.sparse
+  Extra inputs are not permitted [type=extra_forbidden, input_value={'853': 1.0, '3563': 1.0,...780': 1.0, '49626': 1.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/extra_forbidden
+2025-10-17 18:16:05,849 | INFO     | Use pytorch device_name: cpu
+2025-10-17 18:16:05,849 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 18:16:09,453 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 18:16:09,453 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 18:16:09,471 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 18:16:09,472 | INFO     | ✅ Collection 'bofip_hybrid' déjà existante.
+2025-10-17 18:16:09,472 | INFO     | 📥 Indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 18:16:09,580 | INFO     | HTTP Request: PUT http://localhost:6333/collections/bofip_hybrid/points?wait=true "HTTP/1.1 400 Bad Request"
+2025-10-17 18:16:09,580 | ERROR    | ❌ Erreur pendant l’indexation : Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Wrong input: Not existing vector name error: "},"time":0.00483371}'
+2025-10-17 18:17:37,185 | INFO     | Use pytorch device_name: cpu
+2025-10-17 18:17:37,186 | INFO     | Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-10-17 18:17:40,793 | INFO     | HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-10-17 18:17:40,794 | INFO     | 🚀 Lancement du module d'indexation Qdrant
+2025-10-17 18:17:40,809 | INFO     | HTTP Request: GET http://localhost:6333/collections/bofip_hybrid/exists "HTTP/1.1 200 OK"
+2025-10-17 18:17:40,810 | INFO     | 🛠️  Création de la collection hybride 'bofip_hybrid' ...
+2025-10-17 18:17:41,075 | INFO     | HTTP Request: PUT http://localhost:6333/collections/bofip_hybrid "HTTP/1.1 200 OK"
+2025-10-17 18:17:41,076 | INFO     | ✅ Collection 'bofip_hybrid' créée avec succès (dense + sparse).
+2025-10-17 18:17:41,076 | INFO     | 📥 Indexation de 3 documents dans 'bofip_hybrid'...
+2025-10-17 18:17:41,187 | INFO     | HTTP Request: PUT http://localhost:6333/collections/bofip_hybrid/points?wait=true "HTTP/1.1 400 Bad Request"
+2025-10-17 18:17:41,188 | ERROR    | ❌ Erreur pendant l’indexation : Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Wrong input: Not existing vector name error: "},"time":0.010787914}'
