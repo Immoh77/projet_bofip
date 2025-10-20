@@ -1,82 +1,136 @@
-"""
-=== QDRANT INDEXER (compatible client Qdrant <1.10) ===
-"""
-
+import json
 import uuid
-from typing import List
-from qdrant_client import QdrantClient
-from qdrant_client.http import models as qm
-from sentence_transformers import SentenceTransformer
+import logging
+import os
+from tqdm import tqdm
+from dotenv import load_dotenv
+from openai import OpenAI
+from qdrant_client import QdrantClient, models as qm
 from sklearn.feature_extraction.text import HashingVectorizer
 
+# -------------------------
+# ⚙️ CONFIGURATION
+# -------------------------
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("🚨 Clé API OpenAI manquante ! Vérifie ton fichier .env")
 
-def index_documents(
-    texts: List[str],
-    collection_name: str = "bofip_hybrid",
-    model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
-):
-    client = QdrantClient(url="http://localhost:6333")
+COLLECTION_NAME = "bofip_hybrid"
+CHUNKS_FILE = "data/processed/bofip_small_chunks.json"
+QDRANT_URL = "http://localhost:6333"
+BATCH_SIZE = 500
+VECTOR_SIZE = 1536  # text-embedding-3-small
+LOG_FILE = "logs/indexation_openai.log"
 
-    print(f"🔧 Préparation de la collection '{collection_name}'...")
+# -------------------------
+# 🪵 LOGGING
+# -------------------------
+os.makedirs("logs", exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8"),
+        logging.StreamHandler(),
+    ],
+)
+log = logging.getLogger(__name__)
 
-    vector_size = 384 if "MiniLM" in model_name else 768
+# -------------------------
+# 🔌 INITIALISATION DES CLIENTS
+# -------------------------
+client_openai = OpenAI(api_key=OPENAI_API_KEY)
+client_qdrant = QdrantClient(url=QDRANT_URL)
+hv = HashingVectorizer(n_features=2**16, alternate_sign=False, norm=None)
 
-    if client.collection_exists(collection_name):
-        print(f"⚠️ Collection '{collection_name}' déjà existante — suppression...")
-        client.delete_collection(collection_name=collection_name)
+# -------------------------
+# 🧪 TEST DE CONNEXION OPENAI
+# -------------------------
+try:
+    test = client_openai.embeddings.create(model="text-embedding-3-small", input=["test"])
+    log.info("✅ Connexion OpenAI réussie — modèle accessible.")
+except Exception as e:
+    log.error(f"🚨 Erreur lors de la connexion à OpenAI : {e}")
+    raise SystemExit(1)
 
-    # ✅ Création compatible (dictionnaires pour dense et sparse)
-    client.create_collection(
-        collection_name=collection_name,
-        vectors_config={
-            "dense": qm.VectorParams(size=vector_size, distance=qm.Distance.COSINE),
-        },
-        sparse_vectors_config={
-            "sparse": qm.SparseVectorParams(),
-        },
+# -------------------------
+# 🧱 COLLECTION QDRANT
+# -------------------------
+collections = [c.name for c in client_qdrant.get_collections().collections]
+if COLLECTION_NAME not in collections:
+    log.info(f"Création de la collection {COLLECTION_NAME}...")
+    client_qdrant.create_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config={"dense": qm.VectorParams(size=VECTOR_SIZE, distance=qm.Distance.COSINE)},
+        sparse_vectors_config={"sparse": qm.SparseVectorParams()},
     )
+else:
+    log.info(f"Collection existante trouvée : {COLLECTION_NAME}")
 
-    print(f"✅ Collection '{collection_name}' initialisée (hybride dense + sparse).")
+# -------------------------
+# 📄 LECTURE DES CHUNKS
+# -------------------------
+if not os.path.exists(CHUNKS_FILE):
+    raise FileNotFoundError(f"❌ Fichier introuvable : {CHUNKS_FILE}")
 
-    print("🔢 Génération des embeddings denses...")
-    dense_model = SentenceTransformer(model_name)
-    dense_vectors = dense_model.encode(texts, normalize_embeddings=True)
+log.info(f"📄 Lecture des chunks depuis {CHUNKS_FILE}...")
+with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
+    chunks = json.load(f)
 
-    print("🔠 Génération des embeddings sparse (HashingVectorizer)...")
-    hv = HashingVectorizer(n_features=2**16, alternate_sign=False, norm=None)
-    X = hv.transform(texts)
+texts = [chunk.get("contenu", "") for chunk in chunks]
+log.info(f"📊 {len(texts):,} chunks détectés — début de l’indexation")
 
-    print("📦 Préparation des points à indexer...")
-    points = []
-    for i, txt in enumerate(texts):
-        row = X[i]
-        idx = row.indices.tolist()
-        val = row.data.tolist()
+# -------------------------
+# 🧠 EMBEDDINGS OPENAI
+# -------------------------
+def embed_openai(batch_texts):
+    """Crée des embeddings via l’API OpenAI (text-embedding-3-small)."""
+    response = client_openai.embeddings.create(
+        model="text-embedding-3-small",
+        input=batch_texts
+    )
+    return [d.embedding for d in response.data]
 
-        points.append(
-            qm.PointStruct(
-                id=str(uuid.uuid4()),
-                vector={
-                    "dense": dense_vectors[i].tolist(),
-                    "sparse": qm.SparseVector(indices=idx, values=val),
-                },
-                payload={"text": txt},
-            )
+# -------------------------
+# 🪶 ENCODAGE SPARSE
+# -------------------------
+log.info("🪶 Génération des embeddings sparse (HashingVectorizer)...")
+X_sparse = hv.transform(texts)
+indices_list = [X_sparse[i].indices.tolist() for i in range(X_sparse.shape[0])]
+values_list = [X_sparse[i].data.tolist() for i in range(X_sparse.shape[0])]
+
+# -------------------------
+# 📤 INDEXATION DANS QDRANT
+# -------------------------
+log.info("🚀 Début de l’insertion dans Qdrant...")
+
+for start in tqdm(range(0, len(texts), BATCH_SIZE), desc="Indexation Qdrant"):
+    end = min(start + BATCH_SIZE, len(texts))
+    batch_texts = texts[start:end]
+
+    # Génération des embeddings OpenAI par lot
+    dense_vectors = embed_openai(batch_texts)
+
+    # Construction des points à insérer
+    points = [
+        qm.PointStruct(
+            id=str(uuid.uuid4()),
+            vector={
+                "dense": dense_vectors[i],
+                "sparse": qm.SparseVector(
+                    indices=indices_list[start + i],
+                    values=values_list[start + i],
+                ),
+            },
+            payload={"text": batch_texts[i], **chunks[start + i].get("metadata", {})},
         )
-
-        if (i + 1) % 100 == 0:
-            print(f"→ {i + 1} documents préparés...")
-
-    print("🚀 Insertion des vecteurs dans Qdrant...")
-    client.upsert(collection_name=collection_name, points=points)
-
-    print(f"✅ {len(points)} documents indexés avec succès dans '{collection_name}'.")
-
-
-if __name__ == "__main__":
-    texts = [
-        "Définition de l'impôt sur le revenu.",
-        "Régime fiscal des sociétés.",
-        "TVA applicable sur les ventes intracommunautaires.",
+        for i in range(len(batch_texts))
     ]
-    index_documents(texts)
+
+    # Insertion dans Qdrant
+    client_qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
+    log.info(f"📦 Batch {start//BATCH_SIZE + 1}: {len(points)} points insérés ({end}/{len(texts)})")
+
+log.info(f"✅ Indexation terminée — {len(texts):,} points insérés dans {COLLECTION_NAME}")
+
