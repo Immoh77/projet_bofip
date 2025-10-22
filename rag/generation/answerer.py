@@ -1,69 +1,129 @@
 import os
 from openai import OpenAI
-from dotenv import load_dotenv
-from rag.config import OPENAI_API_KEY
-from rag.config import PROMPT_ANSWER
-from rag.config import OPENAI_CHAT_MODEL
-from rag.retrieval.retriever import get_big_chunks_from_small
+from rag.config import PROMPT_ANSWER, OPENAI_CHAT_MODEL
+from rag.retrieval.qdrant_retriever import QdrantRetriever
 
-# === CHARGEMENT CLE API ===
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# === AJOUT DES SOURCES EN ANNEXE===
+# -------------------------------
+# 🔹 1. Utilitaires de formatage
+# -------------------------------
 
-def append_sources(answer, chunks):
+def _norm_text_from_chunk(ch: dict) -> str:
+    """Récupère le texte du chunk (supporte small/big et variantes)."""
+    if ch.get("text"):
+        return ch["text"]
+    if ch.get("contenu"):
+        return ch["contenu"]
+    meta = ch.get("metadata", {}) or {}
+    return meta.get("text", "")
 
-    sources = set()  # Utilise un set pour éviter les doublons de sources
-    for chunk in chunks:
-        meta = chunk.get("metadata", {})  # Récupère les métadonnées associées au chunk
-        titre = meta.get("titre_document", "Sans titre")  # Titre du document (fallback si manquant)
-        base = meta.get("source", "source inconnue").upper()  # Nom de la base (ex: BOFiP), en majuscules
-        url = meta.get("permalien", None)  # Lien vers la source juridique
 
-        if url:  # Si un permalien est disponible, on ajoute une entrée formatée
-            sources.add(f"- [{titre} — {base}]({url})")  # Format Markdown : lien cliquable
+def _build_context_from_big_chunks(big_chunks: list) -> str:
+    """
+    Construit le contexte à injecter au LLM à partir des big chunks.
+    Pas de troncature — les big chunks sont supposés cohérents.
+    """
+    context_lines = []
+    seen = set()
 
-    if sources:  # S'il y a au moins une source, on les ajoute à la réponse
-        answer += "\n\n📎 **Sources utilisées :**\n" + "\n".join(sorted(sources))
+    for ch in big_chunks:
+        cid = ch.get("chunk_id") or ch.get("metadata", {}).get("chunk_id")
+        if cid in seen:
+            continue
+        seen.add(cid)
 
-    return answer
+        meta = ch.get("metadata", {}) or {}
+        titre = meta.get("titre_document", "Sans titre")
+        base = (meta.get("source", "source inconnue") or "").upper()
+        url = meta.get("permalien", "Source inconnue")
 
-# === ENVOI DU CONTEXTE AU LLM ET FORMULATION DE LA REPONSE===
+        texte = _norm_text_from_chunk(ch).strip()
+        context_lines.append(
+            f"Titre : {titre}\nBase : {base}\nSource : {url}\n\n{texte}\n"
+        )
 
-def generate_answer(query, chunks, include_sources=True):
-    print("\n🧠 Étape : Génération de la réponse finale")
+    return "\n".join(context_lines)
 
-    context = "\n\n---\n\n".join(
-        f"{chunk.get('metadata', {}).get('titre_document', '')}\n"
-        f"{chunk.get('metadata', {}).get('titre_bloc', '')}\n"
-        f"Source : {chunk.get('metadata', {}).get('permalien', 'Source inconnue')}\n\n"
-        f"{chunk.get('contenu', '')}"
-        for chunk in chunks
-    )
 
-    user_prompt = (
-        f"Voici la question : \n\n{query}\n\n"
-        f"Voici des extraits juridiques avec leur source issus de bases documentaires :\n\n{context}\n\n"
-        f"** 1ère étape ** : En fonction de la question posée et des extraits juridiques, sélectionne ceux qui répondent totalement ou partiellement à la question.\n"
-        f"Format attendu : ne doit pas apparaitre dans la réponse.\n"
-        f"** 2ème étape ** : Vérifie que les réponses sélectionnées sont cohérentes entre elles.\n"
-        f"Format attendu : ne doit pas apparraitre dans la réponse. \n"
-        f"Si tu n'as pas assez d'éléments, réponds : \"je n'ai pas assez d'éléments à ma disposition pour répondre\" et ne passe pas aux étapes suivantes.\n"
-        f"** 3ème étape ** : Formule un résumé complète des textes en citant les sources.\n"
-        f"Format attendu : Sous-partie : Textes juridiques applicables (en gras et avec une police supérieure) - Résumé de l'article - Source\n"
-        f"** 4ème étape ** : Explique comment ces textes et uniquement ces texte s’appliquent concrètement à la question. Tu ne dois pas extrapoler\n"
-        f"Format attendu : Sous-partie : Application au cas d’espèce (en gras et avec une police supérieure)"
-    )
+def append_sources(answer: str, chunks: list) -> str:
+    """Ajoute les sources uniques à la fin de la réponse."""
+    seen, sources = set(), []
+    for ch in chunks:
+        meta = ch.get("metadata", {}) or {}
+        titre = meta.get("titre_document", "Sans titre")
+        url = meta.get("permalien", None)
+        if not url or url in seen:
+            continue
+        seen.add(url)
+        sources.append(f"- [{titre}]({url})")
+    if not sources:
+        return answer
+    return f"{answer}\n\n---\n\n📎 **Sources utilisées :**\n" + "\n".join(sources)
 
-    print("\n📨 Prompt envoyé au LLM :\n")
-    print(user_prompt)
 
+# -------------------------------
+# 🔹 2. Génération principale
+# -------------------------------
+
+def generate_answer(query: str, chunks: list, include_sources: bool = True) -> str:
+    """
+    Génère la réponse finale à partir des small chunks (issus du retriever).
+    Le module remonte automatiquement les big chunks pour le contexte.
+    """
+    # 1️⃣ Remonter aux big chunks associés
+    try:
+        retriever = QdrantRetriever()
+        big_chunks = retriever.get_big_chunks_from_small(chunks)
+    except Exception:
+        big_chunks = chunks
+
+    # 2️⃣ Construire le contexte complet
+    context = _build_context_from_big_chunks(big_chunks)
+
+    # 3️⃣ Prompt structuré — étapes de raisonnement
+    user_prompt = f"""
+Question posée :
+{query}
+
+Contexte documentaire :
+{context}
+
+---
+
+**1ère étape :** Sélectionne parmi ces extraits juridiques ceux qui répondent directement ou partiellement à la question posée.
+> Format attendu : ne doit pas apparaître dans la réponse.
+
+**2ème étape :** Vérifie la cohérence des extraits sélectionnés.  
+> Format attendu : ne doit pas apparaître dans la réponse.  
+> Si tu n’as pas assez d’informations pour répondre, dis uniquement : "Je n’ai pas assez d’éléments en ma possession pour répondre" et arrête-toi.
+
+**3ème étape :** Résume les textes applicables en citant les sources exactes.  
+> Format attendu :  
+> - **Textes juridiques applicables** (titre de section en gras et plus grand)  
+> - Résumé clair de l’article ou des extraits pertinents  
+> - Indique la **source** (ex. BOFiP, Code général des impôts, etc.)
+
+**4ème étape :** Explique comment ces textes s’appliquent concrètement à la question posée, sans extrapolation ni ajout externe.  
+> Format attendu :  
+> - **Application au cas d’espèce** (titre en gras et plus grand)
+"""
+
+    # 4️⃣ Appel au modèle OpenAI
     response = client.chat.completions.create(
         model=OPENAI_CHAT_MODEL,
         messages=[
             {"role": "system", "content": PROMPT_ANSWER},
-            {"role": "user", "content": user_prompt}
-        ]
+            {"role": "user", "content": user_prompt.strip()},
+        ],
+        temperature=0.0,
     )
-    return response.choices[0].message.content.strip()
+
+    answer = response.choices[0].message.content.strip()
+
+    # 5️⃣ Ajouter les sources si demandé
+    if include_sources:
+        answer = append_sources(answer, big_chunks)
+
+    return answer

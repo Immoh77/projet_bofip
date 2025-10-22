@@ -32,7 +32,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
-BIG_CHUNKS_JSON_PATH = os.getenv("BIG_CHUNKS_JSON_PATH", "data/processed/all_big_chunks.json")
+BIG_CHUNKS_JSON_PATH = os.getenv("BIG_CHUNKS_JSON_PATH", "data/processed/bofip_chunks_bs.json")
 
 # Nombre de résultats par sous-question
 TOP_K_SUBQUESTION = 5
@@ -114,7 +114,9 @@ class QdrantRetriever:
         return vectors
 
     # --- Étape 4 : Recherche hybride Qdrant ---
-    def query_hybrid(self, dense_vec, sparse_vec, limit=TOP_K, prefetch_k=PREFETCH_K):
+    def query_hybrid(self, dense_vec, sparse_vec, limit=None, prefetch_k=None):
+        limit = limit or TOP_K_SUBQUESTION
+        prefetch_k = prefetch_k or PREFETCH_K
         results = self.client.query_points(
             collection_name=self.collection,
             prefetch=[
@@ -183,6 +185,13 @@ class QdrantRetriever:
             reranked = self.rerank_results(hits, question=sq)
             all_reranked[sq] = reranked
 
+        # --- Fusion finale (correction du bug) ---
+        fused_all = [
+            item
+            for sublist in all_reranked.values()
+            for item in sublist
+        ]
+        fused_all = sorted(fused_all, key=lambda x: x.get("rerank_score", 0), reverse=True)
         fused = fused_all[:TOP_K_FINAL]  # limite à 15 chunks maximum
 
         return {
@@ -193,25 +202,59 @@ class QdrantRetriever:
             "fusion_finale": fused,
         }
 
-# === Test direct (exécution manuelle) ===
-if __name__ == "__main__":
-    retriever = QdrantRetriever()
-    q = input("🧠 Question : ")
-    res = retriever.retrieve_with_subquery_rerank(q)
+        # --- Étape 8 : Remontée small → big chunks (depuis JSON local) ---
 
-    print("\n=== Question clarifiée ===")
-    print(res["question_clarifiee"])
+    def get_big_chunks_from_small(self, small_chunks: list):
+        """
+        Récupère les big chunks uniques associés aux small chunks.
+        Si les big chunks ne sont pas dans Qdrant, ils sont chargés depuis le JSON local.
+        """
+        seen = set()
+        big_chunks = []
 
-    print("\n=== Sous-questions générées ===")
-    for s in res["sous_questions"]:
-        print(" -", s)
+        # Charger le fichier JSON des big chunks
+        try:
+            with open(BIG_CHUNKS_JSON_PATH, "r", encoding="utf-8") as f:
+                all_big = json.load(f)
+                all_big_by_id = {b["chunk_id"]: b for b in all_big}
+            print(f"📂 Fichier des big chunks chargé ({len(all_big_by_id)} éléments)")
+        except Exception as e:
+            print(f"⚠️ Impossible de charger le fichier des big chunks : {e}")
+            all_big_by_id = {}
 
-    print("\n=== Résultats par sous-question ===")
-    for sq, hits in res["reranked_par_sous_question"].items():
-        print(f"\n--- {sq} ---")
-        for i, h in enumerate(hits[:3], start=1):
-            print(f"{i}. score={h.get('rerank_score', 0):.2f} → {h.get('text', '')[:150]}...")
+        for ch in small_chunks:
+            meta = ch.get("metadata", {}) or {}
+            parent_id = meta.get("parent_chunk_id") or ch.get("parent_chunk_id")
 
-    print("\n=== Fusion finale ===")
-    for i, f in enumerate(res["fusion_finale"][:10], start=1):
-        print(f"{i}. chunk_id={f['chunk_id']} | score_final={f['score_final']:.2f}")
+            if not parent_id or parent_id in seen:
+                continue
+            seen.add(parent_id)
+
+            # Cas 1 : big chunk déjà dans le payload (optimisation)
+            if meta.get("big_chunk"):
+                big_chunks.append(meta["big_chunk"])
+                continue
+
+            # Cas 2 : big chunk présent dans le JSON local
+            big_local = all_big_by_id.get(parent_id)
+            if big_local:
+                big_chunks.append(big_local)
+                continue
+
+            # Cas 3 : fallback Qdrant (rare)
+            try:
+                results = self.client.query_points(
+                    collection_name=self.collection,
+                    query=parent_id,
+                    with_payload=True,
+                    limit=1,
+                )
+                if results.points:
+                    pl = results.points[0].payload or {}
+                    pl["chunk_id"] = pl.get("chunk_id") or pl.get("metadata", {}).get("chunk_id")
+                    big_chunks.append(pl)
+            except Exception as e:
+                print(f"⚠️ Impossible de récupérer le big chunk {parent_id}: {e}")
+
+        print(f"✅ {len(big_chunks)} big chunks récupérés (via JSON ou Qdrant).")
+        return big_chunks
