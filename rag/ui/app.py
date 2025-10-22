@@ -343,7 +343,12 @@ with col_main:
                 fused_docs = docs.get("fusion_finale", [])
 
                 st.session_state["citations"] = fused_docs
-                answer = generate_answer(st.session_state["question"], fused_docs, include_sources=True)
+                answer = generate_answer(
+                    st.session_state["question"],
+                    fused_docs,
+                    include_sources=True,
+                    llm_model=st.session_state["selected_model"],
+                )
                 st.session_state["answer"] = answer
 
                 history_entry = {

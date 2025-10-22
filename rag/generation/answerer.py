@@ -67,56 +67,54 @@ def append_sources(answer: str, chunks: list) -> str:
 # 🔹 2. Génération principale
 # -------------------------------
 
-def generate_answer(query: str, chunks: list, include_sources: bool = True, model: str = None) -> str:
+def generate_answer(
+    question: str,
+    small_chunks: list,
+    include_sources: bool = True,
+    llm_model: str = None,
+):
     """
-    Génère la réponse finale à partir des small chunks (issus du retriever).
-    Le module remonte automatiquement les big chunks pour le contexte.
-    Permet de choisir dynamiquement le modèle LLM via `model`.
+    Génère la réponse finale en s'appuyant sur les BIG chunks liés aux small_chunks.
     """
-    # 1️⃣ Remonter aux big chunks associés
+    from rag.config import OPENAI_CHAT_MODEL, PROMPT_ANSWER
+    from rag.retrieval.qdrant_retriever import QdrantRetriever
+    from openai import OpenAI
+    import os
+
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    retriever = QdrantRetriever()
+
+    # ✅ 1. Aller chercher les BigChunks comme avant (corrigé)
     try:
-        retriever = QdrantRetriever()
-        big_chunks = retriever.get_big_chunks_from_small(chunks)
-    except Exception:
-        big_chunks = chunks
+        big_chunks = retriever.get_big_chunks_from_small(small_chunks)
+    except Exception as e:
+        print(f"⚠️ Erreur lors de la récupération des BigChunks : {e}")
+        big_chunks = small_chunks  # fallback
 
-    # 2️⃣ Construire le contexte complet
-    context = _build_context_from_big_chunks(big_chunks)
+    # ✅ 2. Construire le contexte depuis les BigChunks
+    context = "\n\n---\n\n".join(
+        ch.get("text")
+        or ch.get("content")
+        or ch.get("metadata", {}).get("text")
+        or ""
+        for ch in big_chunks
+        if ch
+    )
 
-    # 3️⃣ Prompt structuré — étapes de raisonnement
-    user_prompt = f"""
-Question posée :
-{query}
-
-Contexte documentaire :
+    # ✅ 3. Construire le prompt complet
+    user_prompt = f"""Contexte :
 {context}
 
----
-
-**1ère étape :** Sélectionne parmi ces extraits juridiques ceux qui répondent directement ou partiellement à la question posée.
-> Format attendu : ne doit pas apparaître dans la réponse.
-
-**2ème étape :** Vérifie la cohérence des extraits sélectionnés.  
-> Format attendu : ne doit pas apparaître dans la réponse.  
-> Si tu n’as pas assez d’informations pour répondre, ne passe pas à l'étape suivante et dis uniquement : "Je n’ai pas assez d’éléments en ma possession pour répondre".
-
-**3ème étape :** Résume les textes applicables en citant les sources exactes.  
-> Format attendu :  
-> - **Textes juridiques applicables** (titre de section en gras et plus grand)  
-> - Résumé clair de l’article ou des extraits pertinents  
-> - Indique la **source** (ex. BOFiP, Code général des impôts, etc.)
-
-**4ème étape :** Explique comment ces textes s’appliquent concrètement à la question posée, sans extrapolation ni ajout externe.  
-> Format attendu :  
-> - **Application au cas d’espèce** (titre en gras et plus grand)
+Question :
+{question}
 """
 
-    # 4️⃣ Sélection du modèle
-    llm_model = model or OPENAI_CHAT_MODEL
+    # ✅ 4. Utiliser le modèle choisi dans app.py (si fourni)
+    model_name = llm_model
 
-    # 5️⃣ Appel au modèle OpenAI
+    # ✅ 5. Appel au modèle
     response = client.chat.completions.create(
-        model=llm_model,
+        model=model_name,
         messages=[
             {"role": "system", "content": PROMPT_ANSWER},
             {"role": "user", "content": user_prompt.strip()},
@@ -126,8 +124,26 @@ Contexte documentaire :
 
     answer = response.choices[0].message.content.strip()
 
-    # 6️⃣ Ajouter les sources si demandé
+    # ✅ 6. Ajouter les sources si demandé
     if include_sources:
-        answer = append_sources(answer, big_chunks)
+        sources = []
+        seen = set()
+        for ch in big_chunks:
+            md = ch.get("metadata", {}) or {}
+            cid = ch.get("chunk_id") or md.get("chunk_id")
+            if cid in seen:
+                continue
+            seen.add(cid)
+            titre = md.get("titre_document") or md.get("title") or "Source"
+            page = md.get("page") or md.get("page_number") or ""
+            url = md.get("url") or md.get("lien") or ""
+            line = f"- {titre}"
+            if page:
+                line += f" (p.{page})"
+            if url:
+                line += f" — {url}"
+            sources.append(line)
+        if sources:
+            answer += "\n\n---\n**Sources :**\n" + "\n".join(sources)
 
     return answer
