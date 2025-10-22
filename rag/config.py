@@ -29,7 +29,7 @@ SOURCE_FILE = BASE_DIR / "data" / "raw" / "fiscale" / "bofip" / "bofip-vigueur.j
 OUTPUT_BIG_CHUNKS = "data/processed/bofip_chunks_bs.json"
 OUTPUT_SMALL_CHUNKS = "data/processed/bofip_small_chunks.json"
 SMALL_CHUNKS_JSON_PATH = BASE_DIR / "data" / "processed" / "all_small_chunks.json"
-BIG_CHUNKS_JSON_PATH = BASE_DIR / "data" / "processed" / "all_big_chunks.json"
+BIG_CHUNKS_JSON_PATH = BASE_DIR / "data" / "processed" / "bofip_chunks_bs.json"
 CHARTE_IA_PATH = BASE_DIR / "Charte IA" / "Charte IA.pdf"
 
 DOCUMENT_SOURCES = {

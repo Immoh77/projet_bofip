@@ -67,10 +67,11 @@ def append_sources(answer: str, chunks: list) -> str:
 # 🔹 2. Génération principale
 # -------------------------------
 
-def generate_answer(query: str, chunks: list, include_sources: bool = True) -> str:
+def generate_answer(query: str, chunks: list, include_sources: bool = True, model: str = None) -> str:
     """
     Génère la réponse finale à partir des small chunks (issus du retriever).
     Le module remonte automatiquement les big chunks pour le contexte.
+    Permet de choisir dynamiquement le modèle LLM via `model`.
     """
     # 1️⃣ Remonter aux big chunks associés
     try:
@@ -97,7 +98,7 @@ Contexte documentaire :
 
 **2ème étape :** Vérifie la cohérence des extraits sélectionnés.  
 > Format attendu : ne doit pas apparaître dans la réponse.  
-> Si tu n’as pas assez d’informations pour répondre, dis uniquement : "Je n’ai pas assez d’éléments en ma possession pour répondre" et arrête-toi.
+> Si tu n’as pas assez d’informations pour répondre, ne passe pas à l'étape suivante et dis uniquement : "Je n’ai pas assez d’éléments en ma possession pour répondre".
 
 **3ème étape :** Résume les textes applicables en citant les sources exactes.  
 > Format attendu :  
@@ -110,9 +111,12 @@ Contexte documentaire :
 > - **Application au cas d’espèce** (titre en gras et plus grand)
 """
 
-    # 4️⃣ Appel au modèle OpenAI
+    # 4️⃣ Sélection du modèle
+    llm_model = model or OPENAI_CHAT_MODEL
+
+    # 5️⃣ Appel au modèle OpenAI
     response = client.chat.completions.create(
-        model=OPENAI_CHAT_MODEL,
+        model=llm_model,
         messages=[
             {"role": "system", "content": PROMPT_ANSWER},
             {"role": "user", "content": user_prompt.strip()},
@@ -122,7 +126,7 @@ Contexte documentaire :
 
     answer = response.choices[0].message.content.strip()
 
-    # 5️⃣ Ajouter les sources si demandé
+    # 6️⃣ Ajouter les sources si demandé
     if include_sources:
         answer = append_sources(answer, big_chunks)
 
