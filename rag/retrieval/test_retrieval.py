@@ -24,3 +24,9 @@ if __name__ == "__main__":
     print("\n=== 🧩 Fusion finale des résultats ===")
     for i, f in enumerate(result["fusion_finale"][:10], start=1):
         print(f"{i}. chunk_id={f['chunk_id']} | score_final={f['score_final']:.2f}")
+
+    print("\n=== 🧱 Big Chunks associés ===")
+    for i, bc in enumerate(result.get("big_chunks_associes", []), start=1):
+        print(f"{i}. chunk_id={bc.get('chunk_id')} | score_final={bc.get('score_final', 0):.2f}")
+        text = bc.get('text') or bc.get('contenu') or ''
+        print(f"   → {text[:300].strip()}...\n")

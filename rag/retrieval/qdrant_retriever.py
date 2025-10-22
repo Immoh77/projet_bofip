@@ -11,6 +11,7 @@ Pipeline :
 6. (Optionnel) récupération des big chunks associés
 """
 
+import os
 import json
 import numpy as np
 from typing import List, Dict, Any
@@ -18,8 +19,6 @@ from dotenv import load_dotenv
 from qdrant_client import QdrantClient, models as qm
 from openai import OpenAI
 from sklearn.feature_extraction.text import HashingVectorizer
-from pathlib import Path
-import os
 
 # --- Chargement des variables d'environnement ---
 load_dotenv()
@@ -33,15 +32,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
-# 🔹 Calcul du chemin absolu basé sur l’emplacement du fichier retriever.py
-BASE_DIR = Path(__file__).resolve().parents[2]
-BIG_CHUNKS_JSON_PATH = BASE_DIR / "data" / "processed" / "bofip_chunks_bs.json"
-
-# Vérification explicite
-if not BIG_CHUNKS_JSON_PATH.exists():
-    raise FileNotFoundError(f"❌ Fichier introuvable : {BIG_CHUNKS_JSON_PATH}")
-else:
-    print(f"✅ Fichier des Big Chunks trouvé : {BIG_CHUNKS_JSON_PATH}")
+BIG_CHUNKS_JSON_PATH = os.getenv("BIG_CHUNKS_JSON_PATH", "data/processed/bofip_chunks_bs.json")
 
 # Nombre de résultats par sous-question
 TOP_K_SUBQUESTION = 5
@@ -123,9 +114,7 @@ class QdrantRetriever:
         return vectors
 
     # --- Étape 4 : Recherche hybride Qdrant ---
-    def query_hybrid(self, dense_vec, sparse_vec, limit=None, prefetch_k=None):
-        limit = limit or TOP_K_SUBQUESTION
-        prefetch_k = prefetch_k or PREFETCH_K
+    def query_hybrid(self, dense_vec, sparse_vec, limit=TOP_K_SUBQUESTION, prefetch_k=PREFETCH_K):
         results = self.client.query_points(
             collection_name=self.collection,
             prefetch=[
@@ -194,14 +183,11 @@ class QdrantRetriever:
             reranked = self.rerank_results(hits, question=sq)
             all_reranked[sq] = reranked
 
-        # --- Fusion finale (correction du bug) ---
-        fused_all = [
-            item
-            for sublist in all_reranked.values()
-            for item in sublist
-        ]
-        fused_all = sorted(fused_all, key=lambda x: x.get("rerank_score", 0), reverse=True)
-        fused = fused_all[:TOP_K_FINAL]  # limite à 15 chunks maximum
+        fused_all = self.fuse_reranked_results(all_reranked)
+        fused = fused_all[:TOP_K_FINAL]
+
+        # 🆕 Récupération des big chunks associés
+        big_chunks = self.get_big_chunks(fused)
 
         return {
             "question_originale": question,
@@ -209,61 +195,47 @@ class QdrantRetriever:
             "sous_questions": subqs,
             "reranked_par_sous_question": all_reranked,
             "fusion_finale": fused,
+            "big_chunks_associes": big_chunks,
         }
 
-        # --- Étape 8 : Remontée small → big chunks (depuis JSON local) ---
+    # --- Étape 8 : Récupération des big chunks associés ---
+    def get_big_chunks(self, fused_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if not os.path.exists(BIG_CHUNKS_JSON_PATH):
+            print(f"⚠️ Fichier non trouvé : {BIG_CHUNKS_JSON_PATH}")
+            return []
 
-    def get_big_chunks_from_small(self, small_chunks: list):
-        """
-        Récupère les big chunks uniques associés aux small chunks.
-        Si les big chunks ne sont pas dans Qdrant, ils sont chargés depuis le JSON local.
-        """
-        seen = set()
-        big_chunks = []
+        with open(BIG_CHUNKS_JSON_PATH, "r", encoding="utf-8") as f:
+            all_big_chunks = json.load(f)
 
-        # Charger le fichier JSON des big chunks
-        try:
-            with open(BIG_CHUNKS_JSON_PATH, "r", encoding="utf-8") as f:
-                all_big = json.load(f)
-                all_big_by_id = {b["chunk_id"]: b for b in all_big}
-            print(f"📂 Fichier des big chunks chargé ({len(all_big_by_id)} éléments)")
-        except Exception as e:
-            print(f"⚠️ Impossible de charger le fichier des big chunks : {e}")
-            all_big_by_id = {}
+        big_chunks_by_id = {str(b.get("chunk_id")): b for b in all_big_chunks}
+        found = []
+        for f in fused_results:
+            cid = str(f["chunk_id"])
+            if cid in big_chunks_by_id:
+                chunk = big_chunks_by_id[cid].copy()
+                chunk["score_final"] = f["score_final"]
+                found.append(chunk)
+        return found
 
-        for ch in small_chunks:
-            meta = ch.get("metadata", {}) or {}
-            parent_id = meta.get("parent_chunk_id") or ch.get("parent_chunk_id")
+# === Test direct (exécution manuelle) ===
+if __name__ == "__main__":
+    retriever = QdrantRetriever()
+    q = input("🧠 Question : ")
+    res = retriever.retrieve_with_subquery_rerank(q)
 
-            if not parent_id or parent_id in seen:
-                continue
-            seen.add(parent_id)
+    print("\n=== Question clarifiée ===")
+    print(res["question_clarifiee"])
 
-            # Cas 1 : big chunk déjà dans le payload (optimisation)
-            if meta.get("big_chunk"):
-                big_chunks.append(meta["big_chunk"])
-                continue
+    print("\n=== Sous-questions générées ===")
+    for s in res["sous_questions"]:
+        print(" -", s)
 
-            # Cas 2 : big chunk présent dans le JSON local
-            big_local = all_big_by_id.get(parent_id)
-            if big_local:
-                big_chunks.append(big_local)
-                continue
+    print("\n=== Résultats par sous-question ===")
+    for sq, hits in res["reranked_par_sous_question"].items():
+        print(f"\n--- {sq} ---")
+        for i, h in enumerate(hits[:3], start=1):
+            print(f"{i}. score={h.get('rerank_score', 0):.2f} → {h.get('text', '')[:150]}...")
 
-            # Cas 3 : fallback Qdrant (rare)
-            try:
-                results = self.client.query_points(
-                    collection_name=self.collection,
-                    query=parent_id,
-                    with_payload=True,
-                    limit=1,
-                )
-                if results.points:
-                    pl = results.points[0].payload or {}
-                    pl["chunk_id"] = pl.get("chunk_id") or pl.get("metadata", {}).get("chunk_id")
-                    big_chunks.append(pl)
-            except Exception as e:
-                print(f"⚠️ Impossible de récupérer le big chunk {parent_id}: {e}")
-
-        print(f"✅ {len(big_chunks)} big chunks récupérés (via JSON ou Qdrant).")
-        return big_chunks
+    print("\n=== Fusion finale ===")
+    for i, f in enumerate(res["fusion_finale"][:10], start=1):
+        print(f"{i}. chunk_id={f['chunk_id']} | score_final={f['score_final']:.2f}")

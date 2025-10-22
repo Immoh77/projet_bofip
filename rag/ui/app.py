@@ -11,22 +11,32 @@ import base64
 import time
 import threading
 import streamlit as st
+import logging
 
 # --- IMPORTS RAG / QDRANT ---
-from rag.config import TOP_K, FILTER_TREE, CHARTE_IA_PATH
+from rag.config import TOP_K, FILTER_TREE, CHARTE_IA_PATH, LOG_LEVEL, DEFAULT_CHAT_MODEL
 from rag.retrieval.qdrant_retriever import QdrantRetriever
 from rag.generation.answerer import generate_answer
 from rag.utils.history import load_history, append_history
 from rag.evaluation.judge import run_judge
 
+# ==========================================================
+# CONFIGURATION DU LOGGER
+# ==========================================================
+logging.basicConfig(
+    level=getattr(logging, LOG_LEVEL, logging.INFO),
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+logging.info("🔧 Application RAG lancée (niveau de log : %s)", LOG_LEVEL)
 
 # --- Initialisation Qdrant ---
 try:
     retriever = QdrantRetriever()  # sans arguments
+    logging.info("✅ QdrantRetriever initialisé.")
 except Exception as e:
     st.error(f"❌ Erreur lors de l'initialisation de Qdrant : {e}")
+    logging.exception("💥 Échec d'initialisation Qdrant : %s", e)
     retriever = None
-
 
 # --- JUGE ASYNCHRONE ---
 def _launch_judge_async(question: str, contexts: list, answer: str):
@@ -50,8 +60,7 @@ def _launch_judge_async(question: str, contexts: list, answer: str):
     st.session_state["judge_running"] = True
     threading.Thread(target=_task, daemon=True).start()
 
-
-# --- État initial ---
+# --- ÉTAT INITIAL ---
 if "run_search" not in st.session_state:
     st.session_state["run_search"] = False
 if "question" not in st.session_state:
@@ -69,8 +78,7 @@ if "last_sig" not in st.session_state:
 if "judge_running" not in st.session_state:
     st.session_state["judge_running"] = False
 
-
-# --- Configuration de la page ---
+# --- CONFIGURATION PAGE ---
 st.set_page_config(
     page_title="Assistant de recherche juridique et réglementaire en courtage d’assurance",
     layout="wide",
@@ -84,6 +92,7 @@ def get_pdf_download_link(path, link_text="charte de l'IA"):
     b64 = base64.b64encode(pdf_bytes).decode()
     href = f'<a href="data:application/pdf;base64,{b64}" download="charte-ia.pdf" style="color:#e07a1e; font-weight: bold;">{link_text}</a>'
     return href
+
 
 # --- STYLES ORIGINAUX ---
 st.markdown("""
@@ -253,19 +262,17 @@ top_k = st.sidebar.slider("", min_value=5, max_value=30, value=TOP_K, step=1)
 # --- MODELE DE LANGAGE ---
 model_choices = ["chatgpt-4o-latest", "gpt-4o", "gpt-3.5-turbo"]
 
-# Initialisation
 if "selected_model" not in st.session_state:
     st.session_state["selected_model"] = model_choices[0]
 
-# Radio avec label visible
 selected_model = st.sidebar.radio(
-    "🧠 Choisissez le modèle :",  # Label remis ici
+    "🧠 Choisissez le modèle :",
     options=model_choices,
     index=model_choices.index(st.session_state["selected_model"]),
     key="llm_model_select",
 )
-
 st.session_state["selected_model"] = selected_model
+logging.info("🧠 Modèle sélectionné dans l'UI : %s", selected_model)
 
 # --- FILTRES PAR METADONNEES ---
 st.sidebar.markdown("### 🔎 FILTRES PAR METADONNEES", unsafe_allow_html=True)
