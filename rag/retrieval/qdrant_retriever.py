@@ -11,7 +11,6 @@ Pipeline :
 6. (Optionnel) récupération des big chunks associés
 """
 
-import os
 import json
 import numpy as np
 from typing import List, Dict, Any
@@ -19,6 +18,8 @@ from dotenv import load_dotenv
 from qdrant_client import QdrantClient, models as qm
 from openai import OpenAI
 from sklearn.feature_extraction.text import HashingVectorizer
+from pathlib import Path
+import os
 
 # --- Chargement des variables d'environnement ---
 load_dotenv()
@@ -32,7 +33,15 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
-BIG_CHUNKS_JSON_PATH = os.getenv("BIG_CHUNKS_JSON_PATH", "data/processed/bofip_chunks_bs.json")
+# 🔹 Calcul du chemin absolu basé sur l’emplacement du fichier retriever.py
+BASE_DIR = Path(__file__).resolve().parents[2]
+BIG_CHUNKS_JSON_PATH = BASE_DIR / "data" / "processed" / "bofip_chunks_bs.json"
+
+# Vérification explicite
+if not BIG_CHUNKS_JSON_PATH.exists():
+    raise FileNotFoundError(f"❌ Fichier introuvable : {BIG_CHUNKS_JSON_PATH}")
+else:
+    print(f"✅ Fichier des Big Chunks trouvé : {BIG_CHUNKS_JSON_PATH}")
 
 # Nombre de résultats par sous-question
 TOP_K_SUBQUESTION = 5
