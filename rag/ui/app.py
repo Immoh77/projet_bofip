@@ -31,7 +31,7 @@ logging.info("🔧 Application RAG lancée (niveau de log : %s)", LOG_LEVEL)
 
 # --- Initialisation Qdrant ---
 try:
-    retriever = QdrantRetriever()  # sans arguments
+    retriever = QdrantRetriever()
     logging.info("✅ QdrantRetriever initialisé.")
 except Exception as e:
     st.error(f"❌ Erreur lors de l'initialisation de Qdrant : {e}")
@@ -122,7 +122,18 @@ header { background-color: #f9f6f0 !important; box-shadow: none !important; }
 
 /* --- TITRES --- */
 h1 { font-weight: 600; font-size: 2.5rem; margin-bottom: 0; font-family: 'Georgia', serif; }
-h2 { margin-top: 0; font-weight: 400; color: #555555; }
+/* H2 plus gros et bien en gras pour les sections TEXTES/APPLICATION */
+h2 { 
+    margin-top: 1.25rem; 
+    margin-bottom: 0.5rem;
+    font-weight: 700;         /* gras marqué */
+    font-size: 1.8rem;        /* plus grand */
+    color: #333333; 
+    font-family: 'Georgia', serif;
+}
+
+/* Optionnel : rendre le gras plus lisible partout */
+strong, b { color: #222; }
 
 /* --- LABELS ET TEXTES --- */
 label, .stSelectSlider label, .stTextArea label {
@@ -346,13 +357,16 @@ with col_main:
                 if retriever is None:
                     raise RuntimeError("Qdrant non initialisé.")
 
-                docs = retriever.retrieve_with_subquery_rerank(st.session_state["question"])
+                docs = retriever.retrieve_with_subquery_rerank(
+                    st.session_state["question"],
+                    filters=filters
+                )
                 fused_docs = docs.get("fusion_finale", [])
 
                 st.session_state["citations"] = fused_docs
                 answer = generate_answer(
                     st.session_state["question"],
-                    fused_docs,
+                    docs,
                     include_sources=True,
                     llm_model=st.session_state["selected_model"],
                 )
@@ -376,8 +390,7 @@ with col_main:
         if "Une erreur est survenue" in st.session_state["answer"]:
             st.markdown(st.session_state["answer"], unsafe_allow_html=True)
         else:
-            st.markdown("### ✅ Réponse")
-            st.write(st.session_state["answer"])
+            st.markdown(st.session_state["answer"], unsafe_allow_html=False)
 
             contexts = [{"extrait": (c.get("contenu") or "")[:1500]} for c in (st.session_state.get("citations") or [])]
             sig = f"{st.session_state.get('question', '')}::{st.session_state.get('answer', '')[:200]}"
